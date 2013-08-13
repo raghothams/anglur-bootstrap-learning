@@ -1,16 +1,23 @@
 // declare a module
-var myAppModule = angular.module('urlur', []);
+var myAppModule = angular.module('urlur', ['ngCookies']);
 
 myAppModule.config(['$httpProvider', function($httpProvider){
 	delete $httpProvider.defaults.headers.common["X-Requested-With"];
 	delete $httpProvider.defaults.headers.common["content-type"];
+	$httpProvider.defaults.useXDomain = true;
+	// $httpProvider.defaults.withCredentials = true;
+	$httpProvider.defaults.headers.common["Access-Control-Allow-Credentials"] = true;
+
 }]);
 
-function postCtr($scope,$http){
-	
-	$scope.getData = function(){
+function postCtr($scope,$http, $cookieStore, $cookies){
+	// $http.withCredentials = true;
+	alert($cookies.text)
+;	$scope.getData = function(){
 		var me = this;
-		$http.get('http://localhost:5000/post?group_id=51f7e7128b330855713a0788').success(function(json){
+		$scope.cookieValue = $cookieStore.get('tab');
+		alert($scope.cookieValue);
+		$http({url:'http://localhost:5000/post?group_id=51f7e7128b330855713a0788',method:'GET', headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
 			console.log(json);
 			// check for errors
 
@@ -49,5 +56,5 @@ function groupCtr($scope,$http){
 		});
 	};
 
-  	$scope.getData();
+  	// $scope.getData();
 }
