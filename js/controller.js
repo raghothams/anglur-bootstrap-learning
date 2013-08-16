@@ -1,23 +1,46 @@
 // declare a module
 var myAppModule = angular.module('urlur', ['ngCookies']);
 
-myAppModule.config(['$httpProvider', function($httpProvider){
+myAppModule.config(['$routeProvider','$httpProvider', function($routeProvider, $httpProvider){
 	delete $httpProvider.defaults.headers.common["X-Requested-With"];
 	delete $httpProvider.defaults.headers.common["content-type"];
 	$httpProvider.defaults.useXDomain = true;
-	// $httpProvider.defaults.withCredentials = true;
-	$httpProvider.defaults.headers.common["Access-Control-Allow-Credentials"] = true;
+	$httpProvider.defaults.withCredentials = true;
+	//$httpProvider.defaults.headers.common["Access-Control-Allow-Credentials"] = true;
 
 }]);
 
 function postCtr($scope,$http, $cookieStore, $cookies){
 	// $http.withCredentials = true;
-	alert($cookies.text)
-;	$scope.getData = function(){
+	// $rootScope.$cookies = $cookies
+
+	$scope.login = function(){
+		
 		var me = this;
-		$scope.cookieValue = $cookieStore.get('tab');
-		alert($scope.cookieValue);
-		$http({url:'http://localhost:5000/post?group_id=51f7e7128b330855713a0788',method:'GET', headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
+		var loginData = "username="+this.emailVal+"&password="+this.pwdVal;
+		console.log(loginData);
+		var xsrf = $.param({"email": "dev@dev.com","password":"dev123"});
+		$http({
+			url : "http://localhost:5000/signin",
+			method : "POST",
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+
+			data : xsrf
+		}).success(function(data, status, header) {
+		      // console.log(header('Set-Cookie'));
+		      // console.log($cookies);
+		      me.getData();
+		    });
+	};
+
+
+
+	$scope.getData = function($cookies){
+		var me = this;
+		$scope.cookieValue = $cookieStore.get('session');
+		
+		
+		$http({withCredentials: true, url:'http://localhost:5000/post?groupId=520dddba00b8b945e3e98305', headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
 			console.log(json);
 			// check for errors
 
@@ -26,6 +49,7 @@ function postCtr($scope,$http, $cookieStore, $cookies){
 				$("#base-data-container").html(function(){
 					$(this).prepend(alert);
 				});
+				
 			}
 		    
 		    $scope.posts = json.data;
@@ -41,7 +65,7 @@ function postCtr($scope,$http, $cookieStore, $cookies){
 		});
 	};
 
-  	$scope.getData();
+  	$scope.login();
 }
 
 
