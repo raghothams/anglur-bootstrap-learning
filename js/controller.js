@@ -19,16 +19,20 @@ function postCtr($scope,$http, $cookieStore, $cookies){
 		var me = this;
 		var loginData = "username="+this.emailVal+"&password="+this.pwdVal;
 		console.log(loginData);
-		var xsrf = $.param({"email": "dev@dev.com","password":"dev123"});
-		$http({
-			url : "http://localhost:5000/signin",
-			method : "POST",
-			headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-
-			data : xsrf
+    var xsrf = $.param({"email": "dev@dev.com","password":"dev123"});
+		$.ajax({
+crossDomain:true,
+url : "http://173.44.40.56:5000/signin",
+			type : "POST",
+      data: xsrf,
+       xhrFields: {
+withCredentials: true
+}
 		}).success(function(data, status, header) {
-		      // console.log(header('Set-Cookie'));
-		      // console.log($cookies);
+//		      console.log(header('Content-Type'));
+  //        console.log(header('Set-Cookie'));
+    debugger;
+          console.log(header);
 		      me.getData();
 		    });
 	};
@@ -40,20 +44,14 @@ function postCtr($scope,$http, $cookieStore, $cookies){
 		$scope.cookieValue = $cookieStore.get('session');
 		
 		
-		$http({withCredentials: true, url:'http://localhost:5000/post?groupId=520dddba00b8b945e3e98305', headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
+		$.ajax({crossDomain:true,xhrFields:{withCredentials: true},type:"GET", 
+        url:'http://173.44.40.56:5000/post?group_id=520dddba00b8b945e3e98305', 
+        headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
 			console.log(json);
 			// check for errors
-
-			if(json.error){
-				var alert = '<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">×</button>'+json.data[0]+'</div>'
-				$("#base-data-container").html(function(){
-					$(this).prepend(alert);
+        $scope.posts = json.data;
 				});
-				
-			}
 		    
-		    $scope.posts = json.data;
-		});
 	};
 
 	$scope.search = function(){
