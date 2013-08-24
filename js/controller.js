@@ -13,7 +13,9 @@ myAppModule.config(['$routeProvider','$httpProvider', function($routeProvider, $
 function postCtr($scope,$http, $cookieStore, $cookies){
 	// $http.withCredentials = true;
 	// $rootScope.$cookies = $cookies
-
+  $scope.posts = [];
+  var obj = {'title':'fb dummy'};
+  $scope.posts.push(obj);
 	$scope.login = function(){
 		
 		var me = this;
@@ -47,9 +49,13 @@ withCredentials: true
 		$.ajax({crossDomain:true,xhrFields:{withCredentials: true},type:"GET", 
         url:'http://173.44.40.56:5000/post?group_id=520dddba00b8b945e3e98305', 
         headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
-			console.log(json);
+//			console.log(json);
+        console.log('posts ');
+        console.log($scope.posts);
 			// check for errors
         $scope.posts = json.data;
+        $scope.$apply();
+        console.log($scope.posts);
 				});
 		    
 	};
