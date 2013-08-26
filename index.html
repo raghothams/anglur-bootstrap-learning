@@ -49,9 +49,9 @@
     <link rel="shortcut icon" href="favicon.ico">
   </head>
 
-  <body >
+  <body ng-controller="loginCtr">
 
-    <div class="container" ng-controller="loginCtr">
+    <div class="container">
 
       <form class="form-signin">
         <h2 class="form-signin-heading">Please sign in</h2>
@@ -61,7 +61,17 @@
       </form>
 
     </div> <!-- /container -->
-
+    
+    <div class="container">
+      <form class="form-signin">
+        <h2 class="form-signin-heading">Not registred? Signup now!</h2>
+        <input id="reg-name" type="text" class="input-block-level" ng-model="rgName" placeholder="Name">
+        <input id="reg-email" type="text" class="input-block-level" ng-model="rgEmail" placeholder="Email address">
+        <input id="reg-pwd" type="password" class="input-block-level" ng-model="rgPwd" placeholder="Password">
+        <input id="reg-repeat" type="password" class="input-block-level" ng-model="rgRepeat" placeholder="Repeat">
+        <button id="btn-signin" class="btn btn-large btn-primary" ng-click="register()">Sign in</button>
+      </form>
+    </div>
     
     
   </body>
