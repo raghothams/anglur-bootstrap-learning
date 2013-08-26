@@ -33,7 +33,6 @@ withCredentials: true
 		}).success(function(data, status, header) {
 //		      console.log(header('Content-Type'));
   //        console.log(header('Set-Cookie'));
-    debugger;
           console.log(header);
 		      me.getData();
 		    });
@@ -63,13 +62,16 @@ withCredentials: true
 	$scope.search = function(){
 		var me = this;
 		var query = this.searchQuery;
-		$http.get('http://localhost:5000/search?q='+query).success(function(json){
-
+	//	$http.get('http://173.44.40.56:5000/search?q='+query).success(function(json){
+    $.ajax({crossDomain:true,xhrFields:{withCredentials:true},type:"GET",
+        url:'http://173.44.40.56:5000/search?q='+query,
+        headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
 			$scope.posts = [json.data[1]];
+      $scope.$apply();
 		});
 	};
 
-  	$scope.login();
+  	$scope.getData();
 }
 
 
@@ -77,7 +79,7 @@ function groupCtr($scope,$http){
 	
 	$scope.getData = function(){
 		var me = this;
-		$http.get('http://localhost:5000/user/group').success(function(json){
+		$http.get('http://173.44.40.56:5000/user/group').success(function(json){
 			console.log(json.data);
 		    
 		    $scope.groups = json.data;
