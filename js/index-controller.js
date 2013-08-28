@@ -18,7 +18,7 @@ function loginCtr($scope,$http){
       var xsrf = $.param({"email": this.emailVal,"password":this.pwdVal});
       $.ajax({
         crossDomain:true,
-        url : "http://173.44.40.56:5000/signin",
+        url : "http://localhost:5000/signin",
               type : "POST",
               data: xsrf,
                xhrFields: {
@@ -28,7 +28,7 @@ function loginCtr($scope,$http){
             console.log(data);
             // check for statusCode. if success, redirect to home.html
             if(data.error == false){
-              window.location.replace("http://173.44.40.38/testurlur/home.html");
+              window.location.replace("http://localhost/testurlur/home.html");
             } else{
               // throw error
               alert("error logging in");
@@ -50,7 +50,7 @@ function loginCtr($scope,$http){
       var xsrf = $.param({"email": this.rgEmail,"password":this.rgPwd,"verify":this.rgRepeat,"name":this.rgName});
       $.ajax({
         crossDomain:true,
-        url : "http://173.44.40.56:5000/signup",
+        url : "http://localhost:5000/signup",
               type : "POST",
               data: xsrf,
                xhrFields: {
