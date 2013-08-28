@@ -73,7 +73,7 @@
             <div class="well sidebar-nav">
               <ul class="nav nav-list">
                 <li class="nav -header"><h3>Groups</h3></li>
-                <li ng-repeat="group in groups"><a href="#">{{group.name}}</a></li>
+                <li class="group-item" ng-repeat="group in groups" ng-click="selectGroup($event, group)"><a href="#">{{group.name}}</a></li>
               </ul>
             </div>
           </div>
@@ -110,7 +110,7 @@
                   <div class="row-fluid">
                     <!-- placeholder for link -->
                     <div class="lead span10">
-                      <a href={{post.link}}>{{post.link}}</a>
+                      <a href=http://{{post.link}}>{{post.link}}</a>
                     </div>
 
                     <!-- placholder for date -->

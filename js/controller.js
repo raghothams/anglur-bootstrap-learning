@@ -10,81 +10,106 @@ myAppModule.config(['$routeProvider','$httpProvider', function($routeProvider, $
 
 }]);
 
-function postCtr($scope,$http, $cookieStore, $cookies){
+// Factory to share group data between postCtr & groupCtr
+myAppModule.factory('GroupData', function(){
+  return {
+  	'all' : [],
+  	'selected' : undefined
+  };
+});
+
+function postCtr($scope,$http, $cookieStore, $cookies, GroupData){
 	// $http.withCredentials = true;
 	// $rootScope.$cookies = $cookies
   $scope.posts = [];
   var obj = {'title':'fb dummy'};
   $scope.posts.push(obj);
-	$scope.login = function(){
-		
-		var me = this;
-		var loginData = "username="+this.emailVal+"&password="+this.pwdVal;
-		console.log(loginData);
-    var xsrf = $.param({"email": "dev@dev.com","password":"dev123"});
-		$.ajax({
-crossDomain:true,
-url : "http://173.44.40.56:5000/signin",
-			type : "POST",
-      data: xsrf,
-       xhrFields: {
-withCredentials: true
-}
-		}).success(function(data, status, header) {
-//		      console.log(header('Content-Type'));
-  //        console.log(header('Set-Cookie'));
-          console.log(header);
-		      me.getData();
-		    });
-	};
 
-
-
+  // method to fire http request & GET posts
 	$scope.getData = function($cookies){
 		var me = this;
 		$scope.cookieValue = $cookieStore.get('session');
 		
-		
-		$.ajax({crossDomain:true,xhrFields:{withCredentials: true},type:"GET", 
-        url:'http://173.44.40.56:5000/post?group_id=520dddba00b8b945e3e98305', 
-        headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
-//			console.log(json);
-        console.log('posts ');
-        console.log($scope.posts);
-			// check for errors
-        $scope.posts = json.data;
-        $scope.$apply();
-        console.log($scope.posts);
+		// check if any group is selected
+		if(typeof GroupData.selected !== "undefined"){
+				var groupComponent = "group_id="+GroupData.selected._id;
+				console.log(groupComponent);
+
+				// HTTP request to get posts
+				$.ajax({crossDomain:true,xhrFields:{withCredentials: true},type:"GET", 
+		        url:'http://localhost:5000/post?'+groupComponent, 
+		        headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
+
+		        // save data & trigger dataset change 
+					
+						// check for errors
+		        $scope.posts = json.data;
+		        $scope.$apply();
+		        //console.log($scope.posts);
 				});
+		}
 		    
 	};
 
+	// method called when user searches for a post
 	$scope.search = function(){
+	
 		var me = this;
 		var query = this.searchQuery;
-	//	$http.get('http://173.44.40.56:5000/search?q='+query).success(function(json){
+		query = encodeURIComponent(query);
+	
+		// fire http reqest to search user query for posts
     $.ajax({crossDomain:true,xhrFields:{withCredentials:true},type:"GET",
-        url:'http://173.44.40.56:5000/search?q='+query,
+        url:'http://localhost:5000/search?q='+query,
         headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
-			$scope.posts = [json.data[1]];
-      $scope.$apply();
+
+        	// save data & trigger dataset change
+					$scope.posts = [json.data[1]];
+		      $scope.$apply();
 		});
 	};
+
+	// handler for groupSelected event - triggers getData()
+	$scope.$on('groupSelected', function() { 
+		$scope.getData();
+	});
 
   	$scope.getData();
 }
 
 
-function groupCtr($scope,$http){
+function groupCtr($scope,$http, GroupData){
+
+	$scope.selectGroup = function(evt, group){
+
+		// save the selected group in the factory - shared data
+		GroupData.selected = group;
+		console.log('selected - '+group._id);
+
+		// change css class for selected group
+		$('.group-item').removeClass('active');
+		$(evt.currentTarget).addClass('active');
+
+		// fire groupSelected event, which triggers getData() in postCtr
+ 		$scope.$emit('groupSelected');
+		
+	};
 	
 	$scope.getData = function(){
 		var me = this;
-		$http.get('http://173.44.40.56:5000/user/group').success(function(json){
-			console.log(json.data);
-		    
-		    $scope.groups = json.data;
-		});
+
+		// fire http request to get groups
+		$.ajax({crossDomain:true,xhrFields:{withCredentials: true},type:"GET", 
+        url:'http://localhost:5000/user/group', 
+        headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
+
+        	// on success store data & trigger dataset change
+        	$scope.groups = json.data;
+        	$scope.$apply();
+		    	GroupData.all = json.data;
+
+				});
 	};
 
-  	// $scope.getData();
+  	$scope.getData();
 }
