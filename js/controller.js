@@ -23,18 +23,17 @@ function postCtr($scope,$http, $cookieStore, $cookies){
 		console.log(loginData);
     var xsrf = $.param({"email": "dev@dev.com","password":"dev123"});
 		$.ajax({
-crossDomain:true,
-url : "http://173.44.40.56:5000/signin",
-			type : "POST",
-      data: xsrf,
-       xhrFields: {
-withCredentials: true
-}
+			crossDomain:true,
+			url : "http://localhost:5000/signin",
+						type : "POST",
+			      data: xsrf,
+			       xhrFields: {
+			withCredentials: true
+			}
 		}).success(function(data, status, header) {
-//		      console.log(header('Content-Type'));
-  //        console.log(header('Set-Cookie'));
-          console.log(header);
-		      me.getData();
+
+          		console.log(header);
+		      	me.getData();
 		    });
 	};
 
@@ -46,7 +45,7 @@ withCredentials: true
 		
 		
 		$.ajax({crossDomain:true,xhrFields:{withCredentials: true},type:"GET", 
-        url:'http://173.44.40.56:5000/post?group_id=520dddba00b8b945e3e98305', 
+        url:'http://localhost:5000/post?group_id=520dddba00b8b945e3e98305', 
         headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
 //			console.log(json);
         console.log('posts ');
@@ -64,7 +63,7 @@ withCredentials: true
 		var query = this.searchQuery;
 	//	$http.get('http://173.44.40.56:5000/search?q='+query).success(function(json){
     $.ajax({crossDomain:true,xhrFields:{withCredentials:true},type:"GET",
-        url:'http://173.44.40.56:5000/search?q='+query,
+        url:'http://locahost:5000/search?q='+query,
         headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
 			$scope.posts = [json.data[1]];
       $scope.$apply();
@@ -79,7 +78,7 @@ function groupCtr($scope,$http){
 	
 	$scope.getData = function(){
 		var me = this;
-		$http.get('http://173.44.40.56:5000/user/group').success(function(json){
+		$http.get('http://localhost:5000/user/group').success(function(json){
 			console.log(json.data);
 		    
 		    $scope.groups = json.data;
