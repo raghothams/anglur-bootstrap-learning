@@ -10,6 +10,8 @@ myAppModule.config(['$routeProvider','$httpProvider', function($routeProvider, $
 
 }]);
 
+myAppModule.value('apiEndPoint', 'http://localhost:5000');
+
 // Factory to share group data between postCtr & groupCtr
 myAppModule.factory('GroupData', function(){
   return {
@@ -18,7 +20,7 @@ myAppModule.factory('GroupData', function(){
   };
 });
 
-function postCtr($scope,$http, $cookieStore, $cookies, GroupData){
+function postCtr($scope,$http, GroupData, apiEndPoint){
 	// $http.withCredentials = true;
 	// $rootScope.$cookies = $cookies
   $scope.posts = [];
@@ -26,9 +28,9 @@ function postCtr($scope,$http, $cookieStore, $cookies, GroupData){
   $scope.posts.push(obj);
 
   // method to fire http request & GET posts
-	$scope.getData = function($cookies){
+	$scope.getData = function(){
 		var me = this;
-		$scope.cookieValue = $cookieStore.get('session');
+		//$scope.cookieValue = $cookieStore.get('session');
 		
 		// check if any group is selected
 		if(typeof GroupData.selected !== "undefined"){
@@ -37,7 +39,7 @@ function postCtr($scope,$http, $cookieStore, $cookies, GroupData){
 
 				// HTTP request to get posts
 				$.ajax({crossDomain:true,xhrFields:{withCredentials: true},type:"GET", 
-		        url:'http://localhost:5000/post?'+groupComponent, 
+		        url:apiEndPoint+'/post?'+groupComponent, 
 		        headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
 
 		        // save data & trigger dataset change 
@@ -64,7 +66,7 @@ function postCtr($scope,$http, $cookieStore, $cookies, GroupData){
         headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
 
         	// save data & trigger dataset change
-					$scope.posts = [json.data[1]];
+					$scope.posts = json.data;
 		      $scope.$apply();
 		});
 	};
