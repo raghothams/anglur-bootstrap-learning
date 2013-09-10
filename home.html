@@ -81,6 +81,23 @@
 
         <!-- End of sidebar -->
         </div>
+        <!-- 
+        Modal to add url
+        -->
+        <div ng-controller="postCtr" >
+          <button data-toggle="modal" data-target="#myModal" class="btn btn-large btn-primary" type="button" ng-click="onAddClick()">Large button</button>
+          <!-- Modal -->
+          <div ng-show="showAddUrlModal">
+            <div id="myModal"class="modal fade">
+              <div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h3>Modal header</h3></div>
+              <div class="modal-body">body</div>
+              <div class="modal-footer">footer</div>
+            </div>
+          </div> 
+        </div>
+
+
 
         <!-- container for data -->
         <div class="span9">

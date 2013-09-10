@@ -26,7 +26,7 @@ function postCtr($scope,$http, GroupData, apiEndPoint){
   $scope.posts = [];
   var obj = {'title':'fb dummy'};
   $scope.posts.push(obj);
-
+  
   // method to fire http request & GET posts
 	$scope.getData = function(){
 		var me = this;
@@ -51,6 +51,10 @@ function postCtr($scope,$http, GroupData, apiEndPoint){
 				});
 		}
 		    
+	};
+
+	$scope.onAddClick = function(){
+		$scope.showAddUrlModal = true;
 	};
 
 	// method called when user searches for a post
