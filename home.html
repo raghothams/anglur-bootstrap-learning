@@ -68,7 +68,7 @@
 
             <!-- Modal to add url-->
             <!-- Button to add Modal -->
-            <button data-toggle="modal" data-target="#myModal" class="btn btn-primary" type="button" ng-click="onAddClick()">Large button</button>
+            <button data-toggle="modal" data-target="#myModal" class="btn btn-primary" type="button" ng-click="showAddURLModal()">Add New URL</button>
             <!-- Modal -->
             <div ng-show="showAddUrlModal">
               <div id="myModal"class="modal fade">
@@ -81,42 +81,43 @@
 
                       <!-- input for title -->
                       <div class="control-group">
-                        <div class="controls">
-                          <input type="text" placeholder="Title">
+                        <div class="">
+                          <input type="text" class="input-xxlarge offset1 span10" ng-model="ipTitle" placeholder="Title">
                         </div>
                       </div>
 
                       <!-- input for URL -->
                       <div class="control-group">
-                        <div class="controls">
-                          <input type="text" placeholder="URL">
+                        <div class="">
+                          <input type="text" class="input-xxlarge offset1 span10" ng-model="ipURL" placeholder="URL">
                         </div>
                       </div>
 
                       <!-- select component for group -->
-                      <div class="control-group" ng-controller="groupCtr">
-                        <div class="controls">
-                          <select ng-model="slGroup" ng-options="g.name for g in groups">
+                      <div class="control-group" >
+                        <div class="">
+                          <select ng-model="ipGroup" class="input-xxlarge offset1 span10" ng-options="g.name for g in groups"></select>
                         </div>
                       </div>
-
+                    
                       <!-- input for Tags -->
                       <div class="control-group">
-                        <div class="controls">
-                          <input type="text" placeholder="Tag1, Tag2, Tag3">
-                        </div>
-                      </div>
-
-                      <div class="control-group">
-                        <div class="controls">
-                          <button class="btn btn-large btn-primary span6" type="button">Add</button>
+                        <div class="">
+                          <input type="text" class="input-xxlarge offset1 span10" ng-model="ipTags" placeholder="Tag1, Tag2, Tag3">
                         </div>
                       </div>
 
                     </form>
                   </div>
                 </div>
-                <div class="modal-footer">footer</div>
+                <div class="modal-footer">
+                  <div class="control-group">
+                        <div class="controls">
+                          <button class="offset3 btn btn-large btn-primary span6" type="button" ng-click="addUrl()">Add</button>
+                        </div>
+                  </div>
+
+                </div>
               </div>
             </div> 
               
@@ -127,7 +128,7 @@
       
       <div class="row-fluid">
         <!-- Sidebar -->
-        <div class="span3" ng-controller="groupCtr">
+        <div class="span3">
           <div class="row-fluid">
             <div class="well sidebar-nav">
               <ul class="nav nav-list">
