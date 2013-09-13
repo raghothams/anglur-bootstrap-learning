@@ -12,32 +12,6 @@ myAppModule.config(['$routeProvider','$httpProvider', function($routeProvider, $
 
 myAppModule.value('apiEndPoint', 'http://localhost:5000');
 
-// Factory to share group data between postCtr & groupCtr
-// myAppModule.factory('GroupData', function(){
-//   return {
-//   	'all' : [],
-//   	'selected' : undefined
-//   };
-// });
-
-
-// myAppModule.factory('GroupData', function(){
-
-// 		return 
-// 			(function(){
-// 						// fire http request to get groups
-// 						$.ajax({crossDomain:true,xhrFields:{withCredentials: true},type:"GET", 
-// 		        url:'http://localhost:5000/user/group', 
-// 		        headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
-
-// 		        	// on success store data & trigger dataset change
-// 		        	$scope.groups = json.data;
-// 		        	$scope.emit("groupDataLoaded", $scope.groups);
-// 						});
-// 				};)
-				
-			
-// };
 
 function postCtr($scope,$http, apiEndPoint){
 	
@@ -73,6 +47,7 @@ function postCtr($scope,$http, apiEndPoint){
 	};
 
 	$scope.showAddURLModal = function(){
+		$('#addURLProgress').hide();
 		$scope.showAddUrlModal = true;
 	};
 
@@ -85,7 +60,7 @@ function postCtr($scope,$http, apiEndPoint){
 	
 		// fire http reqest to search user query for posts
     $.ajax({crossDomain:true,xhrFields:{withCredentials:true},type:"GET",
-        url:'http://localhost:5000/search?q='+query,
+        url:apiEndPoint+'/search?q='+query,
         headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
 
         	// save data & trigger dataset change
@@ -105,12 +80,31 @@ function postCtr($scope,$http, apiEndPoint){
   		// fire POST request
 
   		var payloadObj = {};
-  		payloadObj.title = this.ipTitle;
+  		payloadObj.title = encodeURIComponent(this.ipTitle);
   		payloadObj.link = this.ipURL;
   		payloadObj.groups = this.ipGroup._id;
-  		payloadObj.tags = this.ipTags;
+  		payloadObj.tags = encodeURIComponent(this.ipTags);
 
-  		console.log(payloadObj);
+  		$('#addURLProgress').show();
+  		$('#frmAddURL').hide();
+  		$('#submitURL').toggleClass('disabled');
+  		// fire http reqest to search user query for posts
+	    $.ajax({crossDomain:true,xhrFields:{withCredentials:true},type:"POST",
+	        url:apiEndPoint+'/post',
+	        data:"data="+JSON.stringify(payloadObj),
+	        headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
+
+						$scope.ipTitle = "";
+						$scope.ipURL = "";
+						$scope.ipGroup = "";
+						$scope.ipTags = "";
+						$scope.$apply();
+
+						$('#submitURL').toggleClass('disabled');
+						$('#addURLModal').modal('hide');
+  					$('#frmAddURL').show();      
+
+			});
 
   };
 
@@ -151,6 +145,7 @@ function postCtr($scope,$http, apiEndPoint){
 						});
 	};
 
+	// explicitly load group data on page load
 	$scope.getGroupsData();
 
 }

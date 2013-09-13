@@ -68,16 +68,16 @@
 
             <!-- Modal to add url-->
             <!-- Button to add Modal -->
-            <button data-toggle="modal" data-target="#myModal" class="btn btn-primary" type="button" ng-click="showAddURLModal()">Add New URL</button>
+            <button data-toggle="modal" data-target="#addURLModal" class="btn btn-primary" type="button" ng-click="showAddURLModal()">Add New URL</button>
             <!-- Modal -->
             <div ng-show="showAddUrlModal">
-              <div id="myModal"class="modal fade">
+              <div id="addURLModal"class="modal fade">
                 <div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h3>Add New URL</h3></div>
                 <div class="modal-body">
                   <!-- modal body comes here -->
                   <div>
-                    <form class="form-horizontal">
+                    <form id="frmAddURL" class="form-horizontal">
 
                       <!-- input for title -->
                       <div class="control-group">
@@ -106,14 +106,18 @@
                           <input type="text" class="input-xxlarge offset1 span10" ng-model="ipTags" placeholder="Tag1, Tag2, Tag3">
                         </div>
                       </div>
-
                     </form>
+                    <!-- progress bar -->
+                    <div id="addURLProgress" class="progress progress-warning progress-striped active">
+                      <div class="bar" style="width: 100%;"></div>
+                    </div>
                   </div>
+
                 </div>
                 <div class="modal-footer">
                   <div class="control-group">
                         <div class="controls">
-                          <button class="offset3 btn btn-large btn-primary span6" type="button" ng-click="addUrl()">Add</button>
+                          <button id="submitURL" class="offset3 btn btn-large btn-primary span6" type="button" ng-click="addUrl()">Add</button>
                         </div>
                   </div>
 
@@ -124,8 +128,6 @@
             <!-- End of Modal -->
       </div>
 
-      
-      
       <div class="row-fluid">
         <!-- Sidebar -->
         <div class="span3">
