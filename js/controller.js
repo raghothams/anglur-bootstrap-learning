@@ -13,16 +13,35 @@ myAppModule.config(['$routeProvider','$httpProvider', function($routeProvider, $
 myAppModule.value('apiEndPoint', 'http://localhost:5000');
 
 // Factory to share group data between postCtr & groupCtr
-myAppModule.factory('GroupData', function(){
-  return {
-  	'all' : [],
-  	'selected' : undefined
-  };
-});
+// myAppModule.factory('GroupData', function(){
+//   return {
+//   	'all' : [],
+//   	'selected' : undefined
+//   };
+// });
 
-function postCtr($scope,$http, GroupData, apiEndPoint){
-	// $http.withCredentials = true;
-	// $rootScope.$cookies = $cookies
+
+// myAppModule.factory('GroupData', function(){
+
+// 		return 
+// 			(function(){
+// 						// fire http request to get groups
+// 						$.ajax({crossDomain:true,xhrFields:{withCredentials: true},type:"GET", 
+// 		        url:'http://localhost:5000/user/group', 
+// 		        headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
+
+// 		        	// on success store data & trigger dataset change
+// 		        	$scope.groups = json.data;
+// 		        	$scope.emit("groupDataLoaded", $scope.groups);
+// 						});
+// 				};)
+				
+			
+// };
+
+function postCtr($scope,$http, apiEndPoint){
+	
+	$scope.currentGroup;
   $scope.posts = [];
   var obj = {'title':'fb dummy'};
   $scope.posts.push(obj);
@@ -33,13 +52,13 @@ function postCtr($scope,$http, GroupData, apiEndPoint){
 		//$scope.cookieValue = $cookieStore.get('session');
 		
 		// check if any group is selected
-		if(typeof GroupData.selected !== "undefined"){
-				var groupComponent = "group_id="+GroupData.selected._id;
-				console.log(groupComponent);
+		if(typeof $scope.currentGroup !== "undefined"){
+				var groupParam = "group_id="+$scope.currentGroup._id;
+				console.log(groupParam);
 
 				// HTTP request to get posts
 				$.ajax({crossDomain:true,xhrFields:{withCredentials: true},type:"GET", 
-		        url:apiEndPoint+'/post?'+groupComponent, 
+		        url:apiEndPoint+'/post?'+groupParam, 
 		        headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
 
 		        // save data & trigger dataset change 
@@ -53,7 +72,7 @@ function postCtr($scope,$http, GroupData, apiEndPoint){
 		    
 	};
 
-	$scope.onAddClick = function(){
+	$scope.showAddURLModal = function(){
 		$scope.showAddUrlModal = true;
 	};
 
@@ -76,20 +95,39 @@ function postCtr($scope,$http, GroupData, apiEndPoint){
 	};
 
 	// handler for groupSelected event - triggers getData()
-	$scope.$on('groupSelected', function() { 
-		$scope.getData();
+	$scope.$on('groupSelected', function(event) { 
+		 $scope.getData();
 	});
 
-  	$scope.getData();
-}
+  // method to get the url details from modal dialog & send it to the backend
+  $scope.addUrl = function(){
+  		// get the user inputs
+  		// fire POST request
 
+  		var payloadObj = {};
+  		payloadObj.title = this.ipTitle;
+  		payloadObj.link = this.ipURL;
+  		payloadObj.groups = this.ipGroup._id;
+  		payloadObj.tags = this.ipTags;
 
-function groupCtr($scope,$http, GroupData){
+  		console.log(payloadObj);
+
+  };
+
+  /*
+	*	Methods to handle events & data related to groups
+	*/
+	
+	// event handler for Group data loaded
+	$scope.$on('groupDataLoaded', function(event, data){
+		$scope.groups = data;
+    $scope.$apply();
+	});
 
 	$scope.selectGroup = function(evt, group){
 
 		// save the selected group in the factory - shared data
-		GroupData.selected = group;
+		$scope.currentGroup = group;
 		console.log('selected - '+group._id);
 
 		// change css class for selected group
@@ -100,22 +138,20 @@ function groupCtr($scope,$http, GroupData){
  		$scope.$emit('groupSelected');
 		
 	};
-	
-	$scope.getData = function(){
-		var me = this;
 
-		// fire http request to get groups
-		$.ajax({crossDomain:true,xhrFields:{withCredentials: true},type:"GET", 
-        url:'http://localhost:5000/user/group', 
-        headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
+	$scope.getGroupsData = function(){
+						// fire http request to get groups
+						$.ajax({crossDomain:true,xhrFields:{withCredentials: true},type:"GET", 
+		        url:apiEndPoint+'/user/group', 
+		        headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
 
-        	// on success store data & trigger dataset change
-        	$scope.groups = json.data;
-        	$scope.$apply();
-		    	GroupData.all = json.data;
-
-				});
+		        	// on success store data & trigger dataset change
+		        	$scope.groups = json.data;
+		        	$scope.$emit("groupDataLoaded", $scope.groups);
+						});
 	};
 
-  	$scope.getData();
+	$scope.getGroupsData();
+
 }
+
