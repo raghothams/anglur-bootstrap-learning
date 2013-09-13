@@ -82,8 +82,11 @@ function postCtr($scope,$http, apiEndPoint){
   		var payloadObj = {};
   		payloadObj.title = encodeURIComponent(this.ipTitle);
   		payloadObj.link = this.ipURL;
+  		payloadObj.category = null;
   		payloadObj.groups = this.ipGroup._id;
-  		payloadObj.tags = encodeURIComponent(this.ipTags);
+
+  		var tagsArray = this.ipTags.split(",");
+  		payloadObj.tags = tagsArray;
 
   		$('#addURLProgress').show();
   		$('#frmAddURL').hide();
