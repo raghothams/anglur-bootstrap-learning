@@ -63,7 +63,12 @@ function postCtr($scope,$http, apiEndPoint){
 
 	$scope.showAddURLModal = function(){
 		$('#addURLProgress').hide();
-		$scope.showAddUrlModal = true;
+		$scope.isAddUrlModal = true;
+	};
+
+	$scope.showAddGroupModal = function(){
+		//$('#addURLProgress').hide();
+		$scope.isAddGroupModal = true;
 	};
 
 	// method called when user searches for a post

@@ -36,12 +36,10 @@
       
         <div class="nav-collapse collapse">
           <div class="menu">
-          <ul class="nav pull-right">
-            <li class="active"><a href="#">Create Group</a></li>
-            <li class=""><a href="#">nav2</a></li>
+          <ul class="nav pull-right" ng-controller="postCtr">
             <li class=""><a href="#">Username, Logout</a></li>
           </ul>
-        </div>
+          </div>
           
         </div>
       </div> 
@@ -59,7 +57,7 @@
 
     <!-- Top bar -->
       <div class="row-fluid">
-            <form class="form-horizontal span7 offset3">
+            <form class="form-horizontal span6 offset3">
               <div class="control-group">
                 <input type="text" ng-model="searchQuery" class="input-large  span6">
                 <button type="submit" class="btn btn-primary margin2" ng-click="search()">Search</button>
@@ -69,7 +67,15 @@
 
             <!-- Modal to add url-->
             <!-- Button to add Modal -->
-            <button data-toggle="modal" data-target="#addURLModal" class="btn btn-primary" type="button" ng-click="showAddURLModal()">Add New URL</button>
+            <div class="btn-toolbar">
+              <!-- <div class="btn-group"> -->
+                <a class="btn" href="#" data-toggle="modal" data-target="#addURLModal" class="btn btn-primary" type="button" ng-click="showAddURLModal()"><i class="icon-plus"></i><i class="icon-magnet"></i></a>
+                <a class="btn" href="#" data-toggle="modal" data-target="#addGroupModal" class="btn btn-primary" type="button" ng-click="showAddGroupModal()"><i class="icon-plus"></i><i class="icon-user"></i><i class="icon-user"></i><i class="icon-user"></i></a>
+              <!-- </div> -->
+            </div>
+            <!-- <button data-toggle="modal" data-target="#addURLModal" class="btn btn-primary" type="button" ng-click="showAddURLModal()">Add New URL</button>
+            <button data-toggle="modal" data-target="#addGroupModal" class="btn btn-primary" type="button" ng-click="showAddGroupModal()"></button> -->
+            <!-- <i class="icon-search"></i> -->
             <addurl></addurl>
             <addgroup></addgroup>
       </div>
@@ -80,8 +86,12 @@
           <div class="row-fluid">
             <div class="well sidebar-nav">
               <ul class="nav nav-list">
-                <li class="nav -header"><h3>Groups</h3></li>
-                <li class="group-item" ng-repeat="group in groups" ng-click="selectGroup($event, group)"><a href="#">{{group.name}}</a><i class="icon-share"></i></li>
+                <li class="nav"><h3>Groups</h3></li>
+                <li class="group-item" ng-repeat="group in groups" ng-click="selectGroup($event, group)">
+                 
+                    <a href="#">{{group.name}}<i class="icon-share pull-right"></i></a>
+                 
+                </li>
               </ul>
             </div>
           </div>
