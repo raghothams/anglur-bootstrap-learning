@@ -12,6 +12,21 @@ myAppModule.config(['$routeProvider','$httpProvider', function($routeProvider, $
 
 myAppModule.value('apiEndPoint', 'http://localhost:5000');
 
+myAppModule.directive("addurl", function(){
+	return{
+		restrict : 'E',
+		templateUrl : 'add-url-modal.html'
+	};
+
+});
+
+myAppModule.directive("addgroup", function(){
+	return{
+		restrict : 'E',
+		templateUrl : 'add-group-modal.html'
+	};
+
+});
 
 function postCtr($scope,$http, apiEndPoint){
 	
