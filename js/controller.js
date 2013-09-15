@@ -67,7 +67,7 @@ function postCtr($scope,$http, apiEndPoint){
 	};
 
 	$scope.showAddGroupModal = function(){
-		//$('#addURLProgress').hide();
+		$('#addGroupProgress').hide();
 		$scope.isAddGroupModal = true;
 	};
 
@@ -125,11 +125,42 @@ function postCtr($scope,$http, apiEndPoint){
 
 						$('#submitURL').toggleClass('disabled');
 						$('#addURLModal').modal('hide');
-  					$('#frmAddURL').show();      
+  					$('#frmAddURL').show(); 
+
+  					$scope.isAddUrlModal = false;
+  					$scope.getData();
 
 			});
 
   };
+
+  $scope.addGroup = function(){
+		
+		var groupName = this.newGroupName;
+		var payloadObj = {};
+		payloadObj.group_name = groupName;
+		var payload = "data="+JSON.stringify(payloadObj);
+		console.log(payload);
+
+		$('#addGroupProgress').show();
+  	$('#frmAddGroup').hide();
+  	$('#submitGroup').toggleClass('disabled');
+		
+		$.ajax({crossDomain:true,xhrFields:{withCredentials:true},type:"POST",
+			url:apiEndPoint+'/group',
+			data:"data="+JSON.stringify(payloadObj),
+			headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
+
+								$('#submitGroup').toggleClass('disabled');
+								$('#addGroupModal').modal('hide');
+		  					$('#frmAddGroup').show();  
+
+		  					$scope.isAddGroupModal = false;
+								$scope.getGroupsData();    
+
+					});
+
+	};
 
   /*
 	*	Methods to handle events & data related to groups
