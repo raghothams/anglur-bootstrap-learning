@@ -21,7 +21,7 @@
       <script src="js/html5shiv.js"></script>
     <![endif]-->
   </head>
-  <body>
+  <body ng-controller="postCtr">
     
     <!-- This is for generating the top bar -->
   <div class="navbar navbar-fixed-top"> 
@@ -36,8 +36,8 @@
       
         <div class="nav-collapse collapse">
           <div class="menu">
-          <ul class="nav pull-right" ng-controller="postCtr">
-            <li class=""><a href="#">Username, Logout</a></li>
+          <ul class="nav pull-right" >
+            <li ng-click="logout()"><a href="#">Username, Logout</a></li>
           </ul>
           </div>
           
@@ -53,7 +53,7 @@
 
 
   <!-- This is for generating the layout -->
-  <div class="container-fluid" ng-controller="postCtr">
+  <div class="container-fluid" >
 
     <!-- Top bar -->
       <div class="row-fluid">

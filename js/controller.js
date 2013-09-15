@@ -168,6 +168,21 @@ function postCtr($scope,$http, apiEndPoint){
 						});
 	};
 
+	$scope.logout = function(){
+						$.ajax({crossDomain:true,xhrFields:{withCredentials:true},type:"POST",
+			        url:apiEndPoint+'/logout',
+			        statusCode:{
+			        	302: function(){
+			        		window.location.replace("http://localhost:8000/index.html");
+			        	}
+			        },
+			        headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
+
+								alert('logout success');    
+
+					});
+	};
+
 	// explicitly load group data on page load
 	$scope.getGroupsData();
 
