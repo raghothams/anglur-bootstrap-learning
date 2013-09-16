@@ -36,6 +36,14 @@ myAppModule.directive("sharegroup", function(){
 
 });
 
+myAppModule.directive("joingroup", function(){
+	return{
+		restrict : 'E',
+		templateUrl : 'join-group-modal.html'
+	};
+
+});
+
 function postCtr($scope,$http, apiEndPoint){
 	
 	$scope.currentGroup;
@@ -55,7 +63,12 @@ function postCtr($scope,$http, apiEndPoint){
 
 				// HTTP request to get posts
 				$.ajax({crossDomain:true,xhrFields:{withCredentials: true},type:"GET", 
-		        url:apiEndPoint+'/post?'+groupParam, 
+		        url:apiEndPoint+'/post?'+groupParam,
+		        statusCode:{
+			        	302: function(){
+			        		window.location.replace("http://localhost:8000/index.html");
+			        	}
+			        },
 		        headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
 
 		        // save data & trigger dataset change 
@@ -81,7 +94,12 @@ function postCtr($scope,$http, apiEndPoint){
 
 	$scope.showShareGroupModal = function(){
 		$scope.isShareGroupModal = true;
-	}
+	};
+
+	$scope.showJoinGroupModal = function(){
+		$('#joinGroupProgress').hide();
+		$scope.isJoinGroupModal = true;
+	};
 
 	// method called when user searches for a post
 	$scope.search = function(){
@@ -93,6 +111,11 @@ function postCtr($scope,$http, apiEndPoint){
 		// fire http reqest to search user query for posts
     $.ajax({crossDomain:true,xhrFields:{withCredentials:true},type:"GET",
         url:apiEndPoint+'/search?q='+query,
+        statusCode:{
+			        	302: function(){
+			        		window.location.replace("http://localhost:8000/index.html");
+			        	}
+			        },
         headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
 
         	// save data & trigger dataset change
@@ -136,6 +159,11 @@ function postCtr($scope,$http, apiEndPoint){
 	    $.ajax({crossDomain:true,xhrFields:{withCredentials:true},type:"POST",
 	        url:apiEndPoint+'/post',
 	        data:"data="+JSON.stringify(payloadObj),
+	        statusCode:{
+			        	302: function(){
+			        		window.location.replace("http://localhost:8000/index.html");
+			        	}
+			        },
 	        headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
 
 						$scope.ipTitle = "";
@@ -170,6 +198,11 @@ function postCtr($scope,$http, apiEndPoint){
 		$.ajax({crossDomain:true,xhrFields:{withCredentials:true},type:"POST",
 			url:apiEndPoint+'/group',
 			data:"data="+JSON.stringify(payloadObj),
+			statusCode:{
+			        	302: function(){
+			        		window.location.replace("http://localhost:8000/index.html");
+			        	}
+			        },
 			headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
 
 								$('#submitGroup').toggleClass('disabled');
@@ -177,6 +210,37 @@ function postCtr($scope,$http, apiEndPoint){
 		  					$('#frmAddGroup').show();  
 
 		  					$scope.isAddGroupModal = false;
+								$scope.getGroupsData();    
+
+					});
+
+	};
+
+	$scope.joinGroup = function(){
+		
+		var groupSharer = this.joinGroupSharer;
+
+		$('#joinGroupProgress').show();
+  	$('#frmJoinGroup').hide();
+  	$('#submitJoinGroup').toggleClass('disabled');
+		
+		$.ajax({crossDomain:true,xhrFields:{withCredentials:true},type:"POST",
+			url:apiEndPoint+'/group/join/'+groupSharer,
+			statusCode:{
+			        	302: function(){
+			        		window.location.replace("http://localhost:8000/index.html");
+			        	}
+			        },
+			headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
+
+							if(json.error){
+								alert(json.data[0]);
+							}
+								$('#submitGroup').toggleClass('disabled');
+								$('#joinGroupModal').modal('hide');
+		  					$('#frmJoinGroup').show();  
+
+		  					$scope.isJoinGroupModal = false;
 								$scope.getGroupsData();    
 
 					});
@@ -211,7 +275,7 @@ function postCtr($scope,$http, apiEndPoint){
 	$scope.shareGroup = function(evt, group){
 		
 		$scope.isShareGroupModal = true;
-		$scope.sharedGroupHash = group._id;
+		$scope.sharedGroupHash = group.hash;
 		$scope.sharedGroupName = group.name;
 
 	}
@@ -219,7 +283,12 @@ function postCtr($scope,$http, apiEndPoint){
 	$scope.getGroupsData = function(){
 						// fire http request to get groups
 						$.ajax({crossDomain:true,xhrFields:{withCredentials: true},type:"GET", 
-		        url:apiEndPoint+'/user/group', 
+		        url:apiEndPoint+'/user/group',
+		        statusCode:{
+			        	302: function(){
+			        		window.location.replace("http://localhost:8000/index.html");
+			        	}
+			        },
 		        headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
 
 		        	// on success store data & trigger dataset change
@@ -245,7 +314,12 @@ function postCtr($scope,$http, apiEndPoint){
 
 	$scope.getUserInfo = function(){
 					$.ajax({crossDomain:true,xhrFields:{withCredentials: true},type:"GET", 
-		        url:apiEndPoint+'/user/info', 
+		        url:apiEndPoint+'/user/info',
+		        statusCode:{
+			        	302: function(){
+			        		window.location.replace("http://localhost:8000/index.html");
+			        	}
+			        },
 		        headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
 
 		        	// on success store data & trigger dataset change
