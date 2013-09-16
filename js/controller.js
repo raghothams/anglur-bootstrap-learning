@@ -28,6 +28,14 @@ myAppModule.directive("addgroup", function(){
 
 });
 
+myAppModule.directive("sharegroup", function(){
+	return{
+		restrict : 'E',
+		templateUrl : 'share-group-modal.html'
+	};
+
+});
+
 function postCtr($scope,$http, apiEndPoint){
 	
 	$scope.currentGroup;
@@ -71,6 +79,10 @@ function postCtr($scope,$http, apiEndPoint){
 		$scope.isAddGroupModal = true;
 	};
 
+	$scope.showShareGroupModal = function(){
+		$scope.isShareGroupModal = true;
+	}
+
 	// method called when user searches for a post
 	$scope.search = function(){
 	
@@ -106,7 +118,16 @@ function postCtr($scope,$http, apiEndPoint){
   		payloadObj.groups = this.ipGroup._id;
 
   		var tagsArray = this.ipTags.split(",");
-  		payloadObj.tags = tagsArray;
+  		var correctedTags = [];
+  		// check for tags starting with space
+  		$.each(tagsArray, function(idx,tag){
+  			while($scope.doesStartWithSpace(tag)){
+  					tag = tag.slice(1,tag.length);
+  			}
+  			correctedTags.push(tag);
+  		});
+
+  		payloadObj.tags = correctedTags;
 
   		$('#addURLProgress').show();
   		$('#frmAddURL').hide();
@@ -179,13 +200,21 @@ function postCtr($scope,$http, apiEndPoint){
 		console.log('selected - '+group._id);
 
 		// change css class for selected group
-		$('.group-item').removeClass('active');
-		$(evt.currentTarget).addClass('active');
+		$('.group-item').parent().removeClass('active');
+		$(evt.currentTarget).parent().addClass('active');
 
 		// fire groupSelected event, which triggers getData() in postCtr
  		$scope.$emit('groupSelected');
 		
 	};
+
+	$scope.shareGroup = function(evt, group){
+		
+		$scope.isShareGroupModal = true;
+		$scope.sharedGroupHash = group._id;
+		$scope.sharedGroupName = group.name;
+
+	}
 
 	$scope.getGroupsData = function(){
 						// fire http request to get groups
@@ -214,8 +243,30 @@ function postCtr($scope,$http, apiEndPoint){
 					});
 	};
 
+	$scope.getUserInfo = function(){
+					$.ajax({crossDomain:true,xhrFields:{withCredentials: true},type:"GET", 
+		        url:apiEndPoint+'/user/info', 
+		        headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
+
+		        	// on success store data & trigger dataset change
+		        	$scope.groups = json.data[0].groups;
+		        	$scope.uname = json.data[0].name;
+		        	$scope.$emit("groupDataLoaded", $scope.groups);
+		        	
+						});
+	}
+
+	// util method to check if a tag (string starts with a blank space)
+	$scope.doesStartWithSpace = function(tag){
+		if(tag[0] === " "){
+			return true;
+		} else{
+			return false;
+		}
+	};
+
 	// explicitly load group data on page load
-	$scope.getGroupsData();
+	$scope.getUserInfo();
 
 }
 
