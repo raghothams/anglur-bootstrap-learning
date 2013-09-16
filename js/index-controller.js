@@ -31,11 +31,14 @@ function loginCtr($scope,$http){
               window.location.replace("http://localhost:8000/home.html");
             } else{
               // throw error
-              alert("error logging in");
+              $scope.authError = data.data;
+              $('#alert-container').show();
             }
       });
     } else{
             // throw alert for wrong username password
+            $scope.authError = "Check username / password";
+            $('#alert-container').show();
     }
 		
 	};
@@ -60,15 +63,18 @@ function loginCtr($scope,$http){
             console.log(data);
             // check for statusCode. if success, redirect to home.html
             if(data.error == false){
-              alert("success");
+              $scope.authResult = "Hurray! Registration successful";
+              $('#alert-container').show();
             } else{
               // throw error
-              alert("error logging in");
-              alert(data[0]);
+              $scope.authResult = "Error registering user";
+              $('#alert-container').show();
             }
       });
     } else{
             // throw alert for wrong username password
+            $scope.authError = "Check user info for registration";
+            $('#alert-container').show();
     }
 		
 	};
