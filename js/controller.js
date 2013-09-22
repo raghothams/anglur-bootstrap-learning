@@ -264,7 +264,7 @@ function postCtr($scope,$http, apiEndPoint){
 		console.log('selected - '+group._id);
 
 		// change css class for selected group
-		$('.group-item').parent().removeClass('active');
+		$('.group-item').removeClass('active');
 		$(evt.currentTarget).parent().addClass('active');
 
 		// fire groupSelected event, which triggers getData() in postCtr
@@ -279,6 +279,10 @@ function postCtr($scope,$http, apiEndPoint){
 		$scope.sharedGroupName = group.name;
 
 	}
+
+	$scope.removeGroup = function(evt, group){
+
+	};
 
 	$scope.getGroupsData = function(){
 						// fire http request to get groups
@@ -343,4 +347,3 @@ function postCtr($scope,$http, apiEndPoint){
 	$scope.getUserInfo();
 
 }
-

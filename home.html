@@ -14,6 +14,12 @@
     <script src="js/angular.js"></script>
     <script type="text/javascript" src="js/angular-ngCookies.js"></script>
     <script src="js/controller.js"></script>
+    <script>
+    $("[rel=tooltip]").tooltip({
+                  'selector': "[rel=tooltip]",
+                  'placement': 'bottom'
+                });
+    </script>
     <link rel="shortcut icon" href="images/favicon.ico">
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
@@ -70,8 +76,8 @@
             <!-- Button to add Modal -->
             <div class="btn-toolbar">
               <!-- <div class="btn-group"> -->
-                <a class="btn" href="#" data-toggle="modal" data-target="#addURLModal" class="btn btn-primary" type="button" ng-click="showAddURLModal()"><i class="icon-plus"></i><i class="icon-magnet"></i></a>
-                <a class="btn" href="#" data-toggle="modal" data-target="#addGroupModal" class="btn btn-primary" type="button" ng-click="showAddGroupModal()"><i class="icon-plus"></i><i class="icon-user"></i><i class="icon-user"></i><i class="icon-user"></i></a>
+                <a class="btn" title="Add Post" href="#" data-toggle="modal" data-target="#addURLModal" class="btn btn-primary" type="button" ng-click="showAddURLModal()"><i class="icon-plus"></i><i class="icon-magnet"></i></a>
+                <a class="btn" title="Add Group" href="#" data-toggle="modal" data-target="#addGroupModal" class="btn btn-primary" type="button" ng-click="showAddGroupModal()"><i class="icon-plus"></i><i class="icon-user"></i><i class="icon-user"></i><i class="icon-user"></i></a>
               <!-- </div> -->
             </div>
             <!-- <button data-toggle="modal" data-target="#addURLModal" class="btn btn-primary" type="button" ng-click="showAddURLModal()">Add New URL</button>
@@ -92,7 +98,11 @@
                 <li class="nav"><h3>Groups</h3></li>
                 <li class="group-item" ng-repeat="group in groups">
                  
-                    <a href="#" ng-click="selectGroup($event, group)">{{group.name}}<i data-toggle="modal" data-target="#shareGroupModal" class="icon-share pull-right" ng-click="shareGroup($event, group)"></i></a>
+                    <a href="#" ng-click="selectGroup($event, group)">{{group.name}}
+                      <i data-toggle="modal" data-target="#shareGroupModal" rel="tooltip" title="Share group" class="icon-share offset5" ng-click="shareGroup($event, group)"></i>
+                      <i data-toggle="modal" data-target="#shareGroupModal" rel="tooltip" title="Remove group" class="icon-remove large offset1" ng-click="removeGroup($event, group)"></i>
+
+                    </a>
                  
                 </li>
               </ul>
