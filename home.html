@@ -85,6 +85,7 @@
             <!-- <i class="icon-search"></i> -->
             <addurl></addurl>
             <addgroup></addgroup>
+            <removegroup></removegroup>
             <sharegroup></sharegroup>
             <joingroup></joingroup>
       </div>
@@ -99,8 +100,8 @@
                 <li class="group-item" ng-repeat="group in groups">
                  
                     <a href="#" ng-click="selectGroup($event, group)">{{group.name}}
-                      <i data-toggle="modal" data-target="#shareGroupModal" rel="tooltip" title="Share group" class="icon-share offset5" ng-click="shareGroup($event, group)"></i>
-                      <i data-toggle="modal" data-target="#shareGroupModal" rel="tooltip" title="Remove group" class="icon-remove large offset1" ng-click="removeGroup($event, group)"></i>
+                      <i data-toggle="modal" data-target="#shareGroupModal" rel="tooltip" title="Share group" class="icon-share offset5" ng-click="onShareGroup($event, group)"></i>
+                      <i data-toggle="modal" data-target="#removeGroupModal" rel="tooltip" title="Remove group" class="icon-remove large offset1" ng-click="onRemoveGroup($event, group)"></i>
 
                     </a>
                  

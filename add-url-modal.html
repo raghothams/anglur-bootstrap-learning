@@ -1,4 +1,4 @@
-<div ng-show="isAddUrlModal">
+<div ng-show="flags.isAddUrlModal">
               <div id="addURLModal"class="modal fade">
                 <div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h3>Add New URL</h3></div>
@@ -10,28 +10,28 @@
                       <!-- input for title -->
                       <div class="control-group">
                         <div class="">
-                          <input type="text" class="input-xxlarge offset1 span10" ng-model="ipTitle" placeholder="Title">
+                          <input type="text" class="input-xxlarge offset1 span10" ng-model="newPost.ipTitle" placeholder="Title">
                         </div>
                       </div>
 
                       <!-- input for URL -->
                       <div class="control-group">
                         <div class="">
-                          <input type="text" class="input-xxlarge offset1 span10" ng-model="ipURL" placeholder="URL">
+                          <input type="text" class="input-xxlarge offset1 span10" ng-model="newPost.ipURL" placeholder="URL">
                         </div>
                       </div>
 
                       <!-- select component for group -->
                       <div class="control-group" >
                         <div class="">
-                          <select ng-model="ipGroup" class="input-xxlarge offset1 span10" ng-options="g.name for g in groups"></select>
+                          <select ng-model="newPost.ipGroup" class="input-xxlarge offset1 span10" ng-options="g.name for g in groups"></select>
                         </div>
                       </div>
                     
                       <!-- input for Tags -->
                       <div class="control-group">
                         <div class="">
-                          <input type="text" class="input-xxlarge offset1 span10" ng-model="ipTags" placeholder="Tag1,Tag for something,Tag3">
+                          <input type="text" class="input-xxlarge offset1 span10" ng-model="newPost.ipTags" placeholder="Tag1,Tag for something,Tag3">
                         </div>
                       </div>
                     </form>

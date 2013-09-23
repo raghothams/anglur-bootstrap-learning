@@ -1,4 +1,4 @@
-<div ng-show="isJoinGroupModal">
+<div ng-show="flags.isJoinGroupModal">
   <div id="joinGroupModal"class="modal fade">
     <div class="modal-header">
     	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -11,7 +11,7 @@
           <!-- input for title -->
           <div class="control-group">
             <div class="">
-              <input type="text" class="input-xxlarge offset1 span10" ng-model="joinGroupSharer" placeholder="Group Sharer">
+              <input type="text" class="input-xxlarge offset1 span10" ng-model="joinGroup.sharer" placeholder="Group Sharer">
             </div>
           </div>
         </form>

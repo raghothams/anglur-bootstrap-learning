@@ -28,6 +28,14 @@ myAppModule.directive("addgroup", function(){
 
 });
 
+myAppModule.directive("removegroup", function(){
+	return{
+		restrict : 'E',
+		templateUrl : 'remove-group-modal.html'
+	};
+
+});
+
 myAppModule.directive("sharegroup", function(){
 	return{
 		restrict : 'E',
@@ -46,11 +54,13 @@ myAppModule.directive("joingroup", function(){
 
 function postCtr($scope,$http, apiEndPoint){
 	
+	//  initialize models
 	$scope.currentGroup;
   $scope.posts = [];
-  var obj = {'title':'fb dummy'};
-  $scope.posts.push(obj);
-  
+  $scope.posts = [];
+  $scope.flags = {};
+  $scope.joinGroup = {};
+
   // method to fire http request & GET posts
 	$scope.getData = function(){
 		var me = this;
@@ -84,21 +94,21 @@ function postCtr($scope,$http, apiEndPoint){
 
 	$scope.showAddURLModal = function(){
 		$('#addURLProgress').hide();
-		$scope.isAddUrlModal = true;
+		$scope.flags.isAddUrlModal = true;
 	};
 
 	$scope.showAddGroupModal = function(){
 		$('#addGroupProgress').hide();
-		$scope.isAddGroupModal = true;
+		$scope.flags.isAddGroupModal = true;
 	};
 
 	$scope.showShareGroupModal = function(){
-		$scope.isShareGroupModal = true;
+		$scope.flags.isShareGroupModal = true;
 	};
 
 	$scope.showJoinGroupModal = function(){
 		$('#joinGroupProgress').hide();
-		$scope.isJoinGroupModal = true;
+		$scope.flags.isJoinGroupModal = true;
 	};
 
 	// method called when user searches for a post
@@ -133,14 +143,14 @@ function postCtr($scope,$http, apiEndPoint){
   $scope.addUrl = function(){
   		// get the user inputs
   		// fire POST request
-
+  		var newPostData = this.newPostData;
   		var payloadObj = {};
-  		payloadObj.title = encodeURIComponent(this.ipTitle);
-  		payloadObj.link = this.ipURL;
+  		payloadObj.title = encodeURIComponent(newPostData.ipTitle);
+  		payloadObj.link = newPostData.ipURL;
   		payloadObj.category = null;
-  		payloadObj.groups = this.ipGroup._id;
+  		payloadObj.groups = newPostData.ipGroup._id;
 
-  		var tagsArray = this.ipTags.split(",");
+  		var tagsArray = newPostData.ipTags.split(",");
   		var correctedTags = [];
   		// check for tags starting with space
   		$.each(tagsArray, function(idx,tag){
@@ -176,7 +186,7 @@ function postCtr($scope,$http, apiEndPoint){
 						$('#addURLModal').modal('hide');
   					$('#frmAddURL').show(); 
 
-  					$scope.isAddUrlModal = false;
+  					$scope.flags.isAddUrlModal = false;
   					$scope.getData();
 
 			});
@@ -209,7 +219,7 @@ function postCtr($scope,$http, apiEndPoint){
 								$('#addGroupModal').modal('hide');
 		  					$('#frmAddGroup').show();  
 
-		  					$scope.isAddGroupModal = false;
+		  					$scope.flags.isAddGroupModal = false;
 								$scope.getGroupsData();    
 
 					});
@@ -218,7 +228,7 @@ function postCtr($scope,$http, apiEndPoint){
 
 	$scope.joinGroup = function(){
 		
-		var groupSharer = this.joinGroupSharer;
+		var groupSharer = this.joinGroup.sharer;
 
 		$('#joinGroupProgress').show();
   	$('#frmJoinGroup').hide();
@@ -240,7 +250,7 @@ function postCtr($scope,$http, apiEndPoint){
 								$('#joinGroupModal').modal('hide');
 		  					$('#frmJoinGroup').show();  
 
-		  					$scope.isJoinGroupModal = false;
+		  					$scope.flags.isJoinGroupModal = false;
 								$scope.getGroupsData();    
 
 					});
@@ -272,16 +282,20 @@ function postCtr($scope,$http, apiEndPoint){
 		
 	};
 
-	$scope.shareGroup = function(evt, group){
+	$scope.onShareGroup = function(evt, group){
 		
-		$scope.isShareGroupModal = true;
-		$scope.sharedGroupHash = group.hash;
-		$scope.sharedGroupName = group.name;
+		$scope.flags.isShareGroupModal = true;
+
+		$scope.sharedGroup = {};
+		$scope.sharedGroup.hash = group.hash;
+		$scope.sharedGroup.name = group.name;
 
 	}
 
-	$scope.removeGroup = function(evt, group){
-
+	$scope.onRemoveGroup = function(evt, group){
+		$scope.flags.isRemoveGroupModal = true;
+		
+		$scope.removeGroupData = group;
 	};
 
 	$scope.getGroupsData = function(){
@@ -330,6 +344,24 @@ function postCtr($scope,$http, apiEndPoint){
 		        	$scope.groups = json.data[0].groups;
 		        	$scope.uname = json.data[0].name;
 		        	$scope.$emit("groupDataLoaded", $scope.groups);
+		        	
+						});
+	};
+
+	$scope.removeGroup = function(){
+					var groupId = this.removeGroupData._id;
+					$.ajax({crossDomain:true,xhrFields:{withCredentials: true},type:"DELETE", 
+		        url:apiEndPoint+'/group/'+groupId,
+		        statusCode:{
+			        	302: function(){
+			        		window.location.replace("http://localhost:8000/index.html");
+			        	}
+			        },
+		        headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
+
+		        	// on success store data & trigger dataset change
+		        	$scope.removeGroupData = {};
+		        	$scope.flags.isRemoveGroupModal = false;
 		        	
 						});
 	}
