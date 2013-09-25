@@ -143,7 +143,7 @@ function postCtr($scope,$http, apiEndPoint){
   $scope.addUrl = function(){
   		// get the user inputs
   		// fire POST request
-  		var newPostData = this.newPostData;
+  		var newPostData = $scope.newPost;
   		var payloadObj = {};
   		payloadObj.title = encodeURIComponent(newPostData.ipTitle);
   		payloadObj.link = newPostData.ipURL;
@@ -350,18 +350,18 @@ function postCtr($scope,$http, apiEndPoint){
 
 	$scope.removeGroup = function(){
 					var groupId = this.removeGroupData._id;
-					$.ajax({crossDomain:true,xhrFields:{withCredentials: true},type:"DELETE", 
-		        url:apiEndPoint+'/group/'+groupId,
-		        statusCode:{
-			        	302: function(){
-			        		window.location.replace("http://localhost:8000/index.html");
-			        	}
-			        },
+					$.ajax({crossDomain:true,
+						type:'DELETE',
+						xhrFields:{withCredentials: true}, 
+		        url:apiEndPoint+'/group_delete?group_id='+groupId,
 		        headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
 
 		        	// on success store data & trigger dataset change
 		        	$scope.removeGroupData = {};
 		        	$scope.flags.isRemoveGroupModal = false;
+
+		        	// update the group data
+		        	$scope.getUserInfo();
 		        	
 						});
 	}

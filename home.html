@@ -154,7 +154,15 @@
                   <!-- row for tags -->
                   <div class="row-fluid">
                     <!-- placeholder for tags -->
-                    <code ng-repeat="tag in post.tags" class="margin2">{{tag}}</code>
+                    <div class="lead span10">
+                      <code ng-repeat="tag in post.tags" class="margin2">{{tag}}</code>
+                    </div>
+
+                    <!-- placeholder for settings -->
+                    <div class="span2 pull-right">
+                      <i class="icon-settings"></i>
+                    </div>
+
                   </div>
                 </div>
 
