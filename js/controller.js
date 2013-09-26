@@ -71,23 +71,34 @@ function postCtr($scope,$http, apiEndPoint){
 				var groupParam = "group_id="+$scope.currentGroup._id;
 				console.log(groupParam);
 
-				// HTTP request to get posts
-				$.ajax({crossDomain:true,xhrFields:{withCredentials: true},type:"GET", 
-		        url:apiEndPoint+'/post?'+groupParam,
-		        statusCode:{
-			        	302: function(){
-			        		window.location.replace("http://localhost:8000/index.html");
-			        	}
-			        },
-		        headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
+				// // HTTP request to get posts
+				// $.ajax({crossDomain:true,xhrFields:{withCredentials: true},type:"GET", 
+		  //       url:apiEndPoint+'/post?'+groupParam,
+		  //       statusCode:{
+			 //        	302: function(){
+			 //        		window.location.replace("http://localhost:8000/index.html");
+			 //        	}
+			 //        },
+		  //       headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
 
-		        // save data & trigger dataset change 
+		  //       // save data & trigger dataset change 
 					
-						// check for errors
-		        $scope.posts = json.data;
-		        $scope.$apply();
-		        //console.log($scope.posts);
-				});
+				// 		// check for errors
+		  //       $scope.posts = json.data;
+		  //       $scope.$apply();
+		  //       //console.log($scope.posts);
+				// });
+
+		    $http({method: 'GET', url : "http://192.168.1.11:5000/post?"+groupParam, withCredentials: true}).success(
+                    function(data, status, headers, config){
+                      
+                      $scope.posts = data.data;
+						        	
+                    }).error(
+	                    function(data, status, headers, config){
+	                      alert("posts call fail");
+                    }
+      			);
 		}
 		    
 	};
@@ -262,10 +273,10 @@ function postCtr($scope,$http, apiEndPoint){
 	*/
 	
 	// event handler for Group data loaded
-	$scope.$on('groupDataLoaded', function(event, data){
-		$scope.groups = data;
-    $scope.$apply();
-	});
+	// $scope.$on('groupDataLoaded', function(event, data){
+	// 	$scope.groups = data;
+ //    $scope.$apply();
+	// });
 
 	$scope.selectGroup = function(evt, group){
 
@@ -331,39 +342,46 @@ function postCtr($scope,$http, apiEndPoint){
 	};
 
 	$scope.getUserInfo = function(){
-					$.ajax({crossDomain:true,xhrFields:{withCredentials: true},type:"GET", 
-		        url:apiEndPoint+'/user/info',
-		        statusCode:{
-			        	302: function(){
-			        		window.location.replace("http://localhost:8000/index.html");
-			        	}
-			        },
-		        headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
+					
+						$http({method: 'GET', url : "http://192.168.1.11:5000/user/info", withCredentials: true}).success(
+                    function(data, status, headers, config){
+                      
+                      $scope.groups = data.data[0].groups;
+						        	$scope.uname = data.data[0].name;
+						        	$scope.$emit("groupDataLoaded", $scope.groups);
 
-		        	// on success store data & trigger dataset change
-		        	$scope.groups = json.data[0].groups;
-		        	$scope.uname = json.data[0].name;
-		        	$scope.$emit("groupDataLoaded", $scope.groups);
-		        	
-						});
+                    }).error(
+	                    function(data, status, headers, config){
+	                      alert("userinfo fail");
+                    }
+      			);
 	};
 
 	$scope.removeGroup = function(){
 					var groupId = this.removeGroupData._id;
-					$.ajax({crossDomain:true,
-						type:'DELETE',
-						xhrFields:{withCredentials: true}, 
-		        url:apiEndPoint+'/group_delete?group_id='+groupId,
-		        headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
+					// $.ajax({crossDomain:true,
+					// 	type:'DELETE',
+					// 	xhrFields:{withCredentials: true}, 
+		   //      url:apiEndPoint+'/group_delete?group_id='+groupId,
+		   //      headers:{'Access-Control-Allow-Credentials':true}}).success(function(json){
 
-		        	// on success store data & trigger dataset change
-		        	$scope.removeGroupData = {};
-		        	$scope.flags.isRemoveGroupModal = false;
+		   //      	// on success store data & trigger dataset change
+		   //      	$scope.removeGroupData = {};
+		   //      	$scope.flags.isRemoveGroupModal = false;
 
-		        	// update the group data
-		        	$scope.getUserInfo();
+		   //      	// update the group data
+		   //      	$scope.getUserInfo();
 		        	
-						});
+					// 	});
+			$http({method: 'DELETE', url:'http://192.168.1.11:5000/group_delete?group_id='+groupId, withCredentials: true}).success(
+										function(data, status, headers, config){
+											alert("remove success");
+										}
+			).error(
+										function(data, status, headers, config){
+											alert("remove fail");
+										}
+			);
 	}
 
 	// util method to check if a tag (string starts with a blank space)
